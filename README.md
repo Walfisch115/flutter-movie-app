@@ -1,5 +1,9 @@
-# Movie-App
-A movie app build with Flutter and the [TMDB API](https://www.themoviedb.org/).
+# Flutter Movie App
+A movie app build with Flutter and the [TMDB API](https://www.themoviedb.org).
+
+## Screenshots
+
+## Features
 
 ## To Do's
 - [x] UI design
@@ -16,4 +20,8 @@ A movie app build with Flutter and the [TMDB API](https://www.themoviedb.org/).
 ## API Documentation
 https://developer.themoviedb.org/docs
 
-## Preview
+## Credits
+Data provided by [The Movie Database](https://www.themoviedb.org).  
+Watch Providers provided by [JustWatch](https://www.justwatch.com/).
+
+<img height="15px" src="./tmdb_logo.svg">
