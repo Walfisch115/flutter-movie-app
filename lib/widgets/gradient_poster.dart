@@ -17,7 +17,6 @@ class GradientPoster extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               Colors.transparent,
-              // Color.fromARGB(191, 31, 29, 43),
               Color.fromARGB(255, 31, 29, 43),
             ],
             stops: [0.25, 1],

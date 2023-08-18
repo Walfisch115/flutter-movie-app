@@ -37,13 +37,6 @@ class MovieDetail {
 
   String get getReleaseDate {
     if (releaseDate != "") {
-      // String locale = Localizations.localeOf(context).languageCode;
-      // DateTime date = DateTime.parse(releaseDate);
-
-      // String day = DateFormat.d(locale).format(date);
-      // String month = DateFormat.MMMM(locale).format(date);
-      // String year = DateFormat.y(locale).format(date);
-
       var date = DateTime.parse(releaseDate);
 
       String day = date.day.toString();
@@ -61,18 +54,4 @@ class MovieDetail {
     int minutes = runtime % 60;
     return '${hours == 0 ? '' : '$hours Std. '}$minutes Min.';
   }
-
-  // String getFormattedDate(context) {
-  //   String locale = Localizations.localeOf(context).toLanguageTag();
-  //   DateTime parsedDate = DateTime.parse(releaseDate);
-
-  //   String day = DateFormat.d(locale).format(parsedDate);
-  //   String month = DateFormat.MMMM(locale).format(parsedDate);
-  //   String year = DateFormat.y(locale).format(parsedDate);
-
-  //   DateFormat outputFormat = DateFormat('dd. MMMM yyyy');
-  //   String date = outputFormat.format(parsedDate);
-
-  //   return '$day. $month $year';
-  // }
 }

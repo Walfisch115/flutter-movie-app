@@ -27,8 +27,11 @@ class _SearchPageState extends State<SearchPage> {
       Uri.https(
         "api.themoviedb.org",
         "/3/search/movie",
-        {"api_key": ApiKey.apiKey, "query": query, "language": "de"},
-        // "append_to_response": "watch/providers"
+        {
+          "api_key": ApiKey.apiKey,
+          "query": query,
+          "language": "de",
+        },
       ),
     );
 
@@ -40,7 +43,6 @@ class _SearchPageState extends State<SearchPage> {
         movies.add(movie);
       }
       return movies;
-      // search = MovieListBuilder(future: future);
     } else {
       throw Exception('Failed to load movies');
     }
@@ -82,7 +84,6 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
             const SizedBox(height: 8),
-            // const SizedBox(height: 16),
             Expanded(
               child: search,
             ),

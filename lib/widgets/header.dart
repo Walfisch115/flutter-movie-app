@@ -44,13 +44,11 @@ class Header extends StatelessWidget {
               ),
             ),
           ),
-          //const BackButton(),
         ],
       );
     } else {
       return Column(
         children: [
-          //Row(children: [BackButton()]),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 48, 16, 32),

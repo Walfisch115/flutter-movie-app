@@ -46,6 +46,8 @@ app.*.map.json
 # API key
 /lib/api/api_key.dart
 
+/lib/data
+
 /linux
 /macos
 /windows
