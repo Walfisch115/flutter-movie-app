@@ -9,6 +9,7 @@ import 'package:movie_app/widgets/story.dart';
 import 'package:movie_app/widgets/streaming.dart';
 import 'package:movie_app/widgets/genre.dart';
 import 'package:movie_app/widgets/header.dart';
+import 'package:movie_app/widgets/credits.dart';
 
 class MovieDetailsPage extends StatelessWidget {
   const MovieDetailsPage({
@@ -26,7 +27,7 @@ class MovieDetailsPage extends StatelessWidget {
         {
           "api_key": ApiKey.apiKey,
           "language": "de",
-          "append_to_response": "watch/providers",
+          "append_to_response": "watch/providers,credits",
         },
       ),
     );
@@ -104,11 +105,33 @@ class MovieDetailsPage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 8,
-                        ),
+                        const SizedBox(height: 8),
                         Streaming(
                           streamingProviders: snapshot.data!.watchProvider,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: const [
+                            Text(
+                              'Besetzung und Crew',
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 241, 241, 245),
+                                fontSize: 22,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Credits(
+                          credits: snapshot.data!.credits,
                         ),
                       ],
                     ),

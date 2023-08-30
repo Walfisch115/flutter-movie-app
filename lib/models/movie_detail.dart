@@ -8,6 +8,7 @@ class MovieDetail {
   final int runtime;
   final List<dynamic> genre;
   final Map<String, dynamic> watchProvider;
+  final Map<String, dynamic> credits;
 
   MovieDetail({
     required this.id,
@@ -19,6 +20,7 @@ class MovieDetail {
     required this.runtime,
     required this.genre,
     required this.watchProvider,
+    required this.credits,
   });
 
   factory MovieDetail.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class MovieDetail {
       runtime: json['runtime'],
       genre: json['genres'],
       watchProvider: json['watch/providers'],
+      credits: json['credits'],
     );
   }
 

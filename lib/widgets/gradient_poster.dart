@@ -19,7 +19,6 @@ class GradientPoster extends StatelessWidget {
               Colors.transparent,
               Color.fromARGB(255, 31, 29, 43),
             ],
-            stops: [0.25, 1],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
