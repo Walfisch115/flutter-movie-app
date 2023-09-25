@@ -59,18 +59,20 @@ class MovieCard extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
-                      color: Colors.white,
+                      color: Color(0xFFF1F1F5),
                     ),
                   ),
                   const SizedBox(height: 8),
                   Row(
                     children: [
                       Text(
-                        movie.getReleaseYear,
+                        movie.releaseDate == ""
+                            ? "N/A"
+                            : DateTime.parse(movie.releaseDate).year.toString(),
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
-                          color: Colors.white70,
+                          color: Color(0xFFD3D3DA),
                         ),
                       ),
                       const Spacer(),

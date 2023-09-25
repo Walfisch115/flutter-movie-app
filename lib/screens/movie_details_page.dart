@@ -1,9 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
-import 'package:movie_app/api/api_key.dart';
-import 'package:movie_app/models/movie_detail.dart';
+import 'package:movie_app/api/tmdb.dart';
 import 'package:movie_app/widgets/icon_feature.dart';
 import 'package:movie_app/widgets/story.dart';
 import 'package:movie_app/widgets/streaming.dart';
@@ -19,24 +16,23 @@ class MovieDetailsPage extends StatelessWidget {
 
   final int id;
 
-  Future<MovieDetail> _fetchMovie() async {
-    final response = await http.get(
-      Uri.https(
-        "api.themoviedb.org",
-        "/3/movie/$id",
-        {
-          "api_key": ApiKey.apiKey,
-          "language": "de",
-          "append_to_response": "watch/providers,credits",
-        },
-      ),
-    );
+  String _formatRuntime(int runtime) {
+    int hours = runtime ~/ 60;
+    int minutes = runtime % 60;
+    return '${hours == 0 ? '' : '$hours Std. '}$minutes Min.';
+  }
 
-    if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body);
-      return MovieDetail.fromJson(jsonData);
+  String _formatReleaseDate(String releaseDate) {
+    if (releaseDate != "") {
+      var date = DateTime.parse(releaseDate);
+
+      String day = date.day.toString();
+      String month = date.month.toString();
+      String year = date.year.toString();
+
+      return '$day.$month.$year';
     } else {
-      throw Exception('Failed to load movie');
+      return 'N/A';
     }
   }
 
@@ -45,7 +41,7 @@ class MovieDetailsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 31, 29, 43),
       body: FutureBuilder(
-        future: _fetchMovie(),
+        future: getMovieDetails(id),
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
             return SingleChildScrollView(
@@ -65,13 +61,13 @@ class MovieDetailsPage extends StatelessWidget {
                         Genre(genre: snapshot.data!.genre),
                         const SizedBox(height: 16),
                         IconFeature(
-                          text: snapshot.data!.getRuntime,
+                          text: _formatRuntime(snapshot.data!.runtime),
                           icon: Icons.schedule_rounded,
                           iconSize: 18,
                         ),
                         const SizedBox(height: 12),
                         IconFeature(
-                          text: snapshot.data!.getReleaseDate,
+                          text: _formatReleaseDate(snapshot.data!.releaseDate),
                           icon: Icons.calendar_today_outlined,
                           iconSize: 16,
                         ),

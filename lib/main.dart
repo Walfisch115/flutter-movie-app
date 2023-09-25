@@ -7,7 +7,9 @@ void main() {
     statusBarColor: Colors.transparent,
     systemNavigationBarColor: Color.fromARGB(255, 31, 29, 43),
   ));
-  runApp(const MainApp());
+  runApp(
+    const MainApp(),
+  );
 }
 
 class MainApp extends StatelessWidget {

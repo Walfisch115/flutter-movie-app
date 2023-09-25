@@ -22,12 +22,4 @@ class Movie {
       voteAverage: json['vote_average'],
     );
   }
-
-  String get getReleaseYear {
-    if (releaseDate != "") {
-      return DateTime.parse(releaseDate).year.toString();
-    } else {
-      return "N/A";
-    }
-  }
 }

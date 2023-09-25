@@ -37,24 +37,4 @@ class MovieDetail {
       credits: json['credits'],
     );
   }
-
-  String get getReleaseDate {
-    if (releaseDate != "") {
-      var date = DateTime.parse(releaseDate);
-
-      String day = date.day.toString();
-      String month = date.month.toString();
-      String year = date.year.toString();
-
-      return '$day.$month.$year';
-    } else {
-      return 'N/A';
-    }
-  }
-
-  String get getRuntime {
-    int hours = runtime ~/ 60;
-    int minutes = runtime % 60;
-    return '${hours == 0 ? '' : '$hours Std. '}$minutes Min.';
-  }
 }
