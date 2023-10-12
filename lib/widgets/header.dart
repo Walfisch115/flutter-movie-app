@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:movie_app/widgets/movie_title.dart';
 import 'package:movie_app/widgets/gradient_poster.dart';
 import 'package:movie_app/widgets/star_rating.dart';
@@ -6,12 +7,12 @@ import 'package:movie_app/widgets/star_rating.dart';
 class Header extends StatelessWidget {
   const Header({
     super.key,
-    required this.posterPath,
+    required this.imagePath,
     required this.title,
     required this.rating,
   });
 
-  final String? posterPath;
+  final String? imagePath;
   final String title;
   final num rating;
 
@@ -19,7 +20,7 @@ class Header extends StatelessWidget {
     if (imagePath != null) {
       return Stack(
         children: [
-          GradientPoster(posterPath: posterPath!),
+          GradientPoster(posterPath: imagePath!),
           Positioned.fill(
             child: Align(
               alignment: Alignment.bottomCenter,
@@ -77,6 +78,6 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _getImageFromNetwork(context, posterPath);
+    return _getImageFromNetwork(context, imagePath);
   }
 }

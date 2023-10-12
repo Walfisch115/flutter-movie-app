@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/style/my_colors.dart';
 
 class GradientPoster extends StatelessWidget {
   const GradientPoster({
@@ -17,7 +18,7 @@ class GradientPoster extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               Colors.transparent,
-              Color.fromARGB(255, 31, 29, 43),
+              MyColors.darkBluishGrey,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

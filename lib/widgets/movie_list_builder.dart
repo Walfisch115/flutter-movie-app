@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:movie_app/models/movie.dart';
-import 'package:movie_app/screens/movie_details_page.dart';
+import 'package:movie_app/screens/movie_details_screen.dart';
+import 'package:movie_app/style/my_colors.dart';
+import 'package:movie_app/widgets/message.dart';
 import 'package:movie_app/widgets/movie_card.dart';
 
 class MovieListBuilder extends StatelessWidget {
@@ -17,19 +19,13 @@ class MovieListBuilder extends StatelessWidget {
     return FutureBuilder(
       future: future,
       builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.hasData) {
           if (snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text(
-                'keine Ergebnisse',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 241, 241, 245),
-                  fontSize: 18,
-                ),
-              ),
+            return const Message(
+              text: 'Keine Ergebnisse.',
             );
           } else {
-            return ListView.builder(
+            return ListView.separated(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
@@ -37,7 +33,7 @@ class MovieListBuilder extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MovieDetailsPage(
+                        builder: (context) => MovieDetailsScreen(
                           id: snapshot.data![index].id,
                         ),
                       ),
@@ -54,11 +50,23 @@ class MovieListBuilder extends StatelessWidget {
                   ),
                 );
               },
+              separatorBuilder: (context, index) {
+                return const SizedBox(
+                  height: 12,
+                );
+              },
             );
           }
+        }
+        if (snapshot.hasError) {
+          return const Message(
+            text: 'Hoppla! Irgendwas ist schiefgelaufen.',
+          );
         } else {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(MyColors.lightBlue),
+            ),
           );
         }
       },

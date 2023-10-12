@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 
+import 'package:movie_app/api/tmdb.dart';
 import 'package:movie_app/widgets/movie_list_builder.dart';
 import 'package:movie_app/widgets/search_bar.dart';
-import 'package:movie_app/api/tmdb.dart';
 
-class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
 
   @override
-  State<SearchPage> createState() => _SearchPageState();
+  State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SearchPageState extends State<SearchPage> {
+class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
-  late Widget search;
+  Widget search = const SizedBox.shrink();
 
-  @override
-  void initState() {
-    search = const SizedBox.shrink();
-    super.initState();
+  void _searchQuery(String query) {
+    setState(() {
+      search = MovieListBuilder(
+        future: searchMovies(query),
+      );
+    });
   }
 
   @override
@@ -29,28 +31,24 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 31, 29, 43),
-      body: SafeArea(
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(vertical: 16),
               child: SearchBar(
                 textController: _searchController,
-                onSubmitted: (value) {
-                  setState(() {
-                    search = MovieListBuilder(
-                      future: searchMovies(value),
-                    );
-                  });
-                },
                 onClear: () {
                   _searchController.clear();
                 },
+                onSubmitted: _searchQuery,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(
+              height: 8,
+            ),
             Expanded(
               child: search,
             ),

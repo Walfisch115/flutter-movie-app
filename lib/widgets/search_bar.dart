@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/style/my_colors.dart';
 
 class SearchBar extends StatelessWidget {
   const SearchBar({
@@ -24,29 +25,31 @@ class SearchBar extends StatelessWidget {
         onTapOutside: (event) {
           FocusManager.instance.primaryFocus?.unfocus();
         },
-        style: const TextStyle(color: Color(0xfff1f1f5)),
+        style: const TextStyle(
+          color: MyColors.darkerWhite,
+        ),
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.all(16),
           hintText: 'Suche...',
           hintStyle: const TextStyle(
-            color: Color.fromARGB(255, 105, 105, 116),
+            color: MyColors.grey,
           ),
           prefixIcon: IconButton(
             onPressed: () {},
             icon: const Icon(
               Icons.search_rounded,
-              color: Color.fromARGB(255, 105, 105, 116),
+              color: MyColors.grey,
             ),
           ),
           suffixIcon: IconButton(
             onPressed: onClear,
             icon: const Icon(
               Icons.clear_rounded,
-              color: Color.fromARGB(255, 105, 105, 116),
+              color: MyColors.grey,
             ),
           ),
           filled: true,
-          fillColor: const Color.fromARGB(255, 37, 40, 54),
+          fillColor: MyColors.bluishGrey,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
             borderSide: const BorderSide(
@@ -56,7 +59,7 @@ class SearchBar extends StatelessWidget {
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
             borderSide: const BorderSide(
-              color: Color.fromARGB(255, 18, 205, 217),
+              color: MyColors.lightBlue,
             ),
           ),
         ),

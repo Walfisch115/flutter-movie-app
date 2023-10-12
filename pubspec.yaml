@@ -11,7 +11,9 @@ dependencies:
   expandable_text: ^2.3.0
   flutter:
     sdk: flutter
+  flutter_riverpod: ^2.3.7
   http: ^0.13.6
+  material_symbols_icons: ^4.2668.0
 
 dev_dependencies:
   flutter_test:
