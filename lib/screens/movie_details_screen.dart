@@ -86,11 +86,14 @@ class _MovieDetailsScreenState extends ConsumerState<MovieDetailsScreen> {
       final watchlist = ref.watch(watchlistProvider);
       final isOnWatchlist = _isOnWatchlist(watchlist, movie);
 
+      double screenWidth = MediaQuery.of(context).size.width;
+
       return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: TransparentAppBar(
           scrollController: _scrollController,
           title: movie.title,
+          screenWidth: screenWidth,
           actions: [
             IconButton(
               onPressed: () {

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:movie_app/models/movie_detail.dart';
 import 'package:movie_app/providers/watchlist_provider.dart';
+import 'package:movie_app/screens/movie_details_screen.dart';
 import 'package:movie_app/style/my_colors.dart';
 import 'package:movie_app/utils/image_from_network.dart';
 
@@ -19,7 +20,7 @@ class WatchlistScreen extends ConsumerWidget {
         surfaceTintColor: Colors.transparent,
         title: const Text(
           'Watchlist',
-          style: TextStyle(color: MyColors.darkerWhite),
+          style: TextStyle(color: MyColors.white),
         ),
         centerTitle: true,
         shape: const Border(
@@ -31,12 +32,24 @@ class WatchlistScreen extends ConsumerWidget {
       ),
       backgroundColor: MyColors.darkBluishGrey,
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
         child: ListView.separated(
           itemCount: watchlist.length,
           itemBuilder: (context, index) {
-            return ItemCard(
-              movie: watchlist[index],
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MovieDetailsScreen(
+                      id: watchlist[index].id,
+                    ),
+                  ),
+                );
+              },
+              child: ItemCard(
+                movie: watchlist[index],
+              ),
             );
           },
           separatorBuilder: (context, index) {

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 import 'package:movie_app/screens/search_screen.dart';
-import 'package:movie_app/screens/settings_screen.dart';
-import 'package:movie_app/screens/start_screen.dart';
 import 'package:movie_app/screens/watchlist_screen.dart';
 import 'package:movie_app/style/my_colors.dart';
 
@@ -27,21 +25,21 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_selectedPageIndex == 0) {
-      activePage = const StartScreen();
-    }
+    // if (_selectedPageIndex == 0) {
+    //   activePage = const StartScreen();
+    // }
 
-    if (_selectedPageIndex == 1) {
+    if (_selectedPageIndex == 0) {
       activePage = const SearchScreen();
     }
 
-    if (_selectedPageIndex == 2) {
+    if (_selectedPageIndex == 1) {
       activePage = const WatchlistScreen();
     }
 
-    if (_selectedPageIndex == 3) {
-      activePage = const SettingsScreen();
-    }
+    // if (_selectedPageIndex == 3) {
+    //   activePage = const SettingsScreen();
+    // }
 
     return Scaffold(
       backgroundColor: MyColors.darkBluishGrey,
@@ -59,11 +57,11 @@ class _NavigationScreenState extends State<NavigationScreen> {
           showSelectedLabels: false,
           showUnselectedLabels: false,
           items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Symbols.home_rounded),
-              activeIcon: Icon(Symbols.home_rounded, fill: 1),
-              label: 'Start',
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Symbols.home_rounded),
+            //   activeIcon: Icon(Symbols.home_rounded, fill: 1),
+            //   label: 'Start',
+            // ),
             BottomNavigationBarItem(
               icon: Icon(Symbols.search_rounded),
               activeIcon: Icon(Symbols.search_rounded, fill: 1),
@@ -74,11 +72,11 @@ class _NavigationScreenState extends State<NavigationScreen> {
               activeIcon: Icon(Symbols.movie_rounded, fill: 1),
               label: 'Watchlist',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Symbols.settings_rounded),
-              activeIcon: Icon(Symbols.settings_rounded, fill: 1),
-              label: 'Einstellungen',
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Symbols.settings_rounded),
+            //   activeIcon: Icon(Symbols.settings_rounded, fill: 1),
+            //   label: 'Einstellungen',
+            // ),
           ],
         ),
       ),

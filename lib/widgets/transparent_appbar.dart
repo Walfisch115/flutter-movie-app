@@ -6,11 +6,13 @@ class TransparentAppBar extends StatefulWidget implements PreferredSizeWidget {
     super.key,
     required this.scrollController,
     required this.title,
+    required this.screenWidth,
     this.actions,
   });
 
   final ScrollController scrollController;
   final String title;
+  final double screenWidth;
   final List<Widget>? actions;
 
   @override
@@ -31,7 +33,7 @@ class _TransparentAppBarState extends State<TransparentAppBar> {
 
     widget.scrollController.addListener(() {
       double offset = widget.scrollController.offset;
-      double maxOffset = 170;
+      double maxOffset = widget.screenWidth / 2;
 
       // calculate the scroll ratio
       double scrollRatio = (offset / maxOffset).clamp(0.0, 1.0);
@@ -62,17 +64,17 @@ class _TransparentAppBarState extends State<TransparentAppBar> {
       backgroundColor: _appBarColor,
       elevation: 0, // no shadow
       shadowColor: _isTransitionComplete
-          ? Colors.black
+          ? MyColors.darkBluishGrey
           : Colors.transparent, // not shown cause elevation is 0
       surfaceTintColor: Colors.transparent,
       title: _isTransitionComplete ? Text(widget.title) : null,
       centerTitle: true,
-      shape: Border(
-        bottom: BorderSide(
-          color: _isTransitionComplete ? MyColors.darkerWhite : Colors.transparent,
-          width: 0.5,
-        ),
-      ),
+      // shape: Border(
+      //   bottom: BorderSide(
+      //     color: _isTransitionComplete ? MyColors.darkerWhite : Colors.transparent,
+      //     width: 0.5,
+      //   ),
+      // ),
     );
   }
 
