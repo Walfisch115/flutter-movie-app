@@ -10,18 +10,11 @@ A movie app build with Flutter and the [TMDB API](https://www.themoviedb.org).
 </p>
 
 ## Features
-
-## To Do's
-- [x] UI design
-- [x] Search page
-- [x] Details page
-- [x] Availability on streaming services
-- [ ] Start page
-- [ ] Watchlist
-- [ ] Add own API key via UI
-- [ ] Dark mode / light mode
-- [ ] Create own lists
-- [ ] Share movies / lists
+- Search for movies
+- View user ratings
+- Plot summary
+- Check availability on streaming services
+- Cast list
 
 ## API Documentation
 https://developer.themoviedb.org/docs
