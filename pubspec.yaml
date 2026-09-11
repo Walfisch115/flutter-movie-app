@@ -4,19 +4,19 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: '>=2.19.6 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   auto_size_text: ^3.0.0
   expandable_text: ^2.3.0
   flutter:
     sdk: flutter
-  http: ^0.13.6
+  http: ^1.6.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true

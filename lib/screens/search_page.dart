@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide SearchBar;
 
 import 'package:movie_app/widgets/movie_list_builder.dart';
 import 'package:movie_app/widgets/search_bar.dart';
