@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart' hide SearchBar;
+import 'package:flutter/material.dart';
 
+import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/widgets/movie_list_builder.dart';
-import 'package:movie_app/widgets/search_bar.dart';
+import 'package:movie_app/widgets/movie_search_bar.dart';
 import 'package:movie_app/api/tmdb.dart';
 
 class SearchPage extends StatefulWidget {
@@ -13,13 +14,9 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
-  late Widget search;
 
-  @override
-  void initState() {
-    search = const SizedBox.shrink();
-    super.initState();
-  }
+  // Ergebnis der letzten Suche, null solange noch nicht gesucht wurde.
+  Future<List<Movie>>? _results;
 
   @override
   void dispose() {
@@ -36,13 +33,14 @@ class _SearchPageState extends State<SearchPage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
-              child: SearchBar(
+              child: MovieSearchBar(
                 textController: _searchController,
                 onSubmitted: (value) {
+                  // Bei leerer Eingabe (oder nur Leerzeichen) nicht suchen.
+                  if (value.trim().isEmpty) return;
+
                   setState(() {
-                    search = MovieListBuilder(
-                      future: tmdb.searchMovies(value),
-                    );
+                    _results = tmdb.searchMovies(value.trim());
                   });
                 },
                 onClear: () {
@@ -52,7 +50,9 @@ class _SearchPageState extends State<SearchPage> {
             ),
             const SizedBox(height: 8),
             Expanded(
-              child: search,
+              child: _results == null
+                  ? const SizedBox.shrink()
+                  : MovieListBuilder(future: _results!),
             ),
           ],
         ),

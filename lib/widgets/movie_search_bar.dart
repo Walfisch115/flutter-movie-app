@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SearchBar extends StatelessWidget {
-  const SearchBar({
+class MovieSearchBar extends StatelessWidget {
+  const MovieSearchBar({
     super.key,
     required this.textController,
     required this.onClear,
@@ -31,12 +31,9 @@ class SearchBar extends StatelessWidget {
           hintStyle: const TextStyle(
             color: Color.fromARGB(255, 105, 105, 116),
           ),
-          prefixIcon: IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search_rounded,
-              color: Color.fromARGB(255, 105, 105, 116),
-            ),
+          prefixIcon: const Icon(
+            Icons.search_rounded,
+            color: Color.fromARGB(255, 105, 105, 116),
           ),
           suffixIcon: IconButton(
             onPressed: onClear,
