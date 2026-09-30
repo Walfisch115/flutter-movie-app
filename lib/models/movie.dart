@@ -17,9 +17,9 @@ class Movie {
     return Movie(
       id: json['id'],
       title: json['title'],
-      releaseDate: json['release_date'],
+      releaseDate: json['release_date'] ?? '',
       posterPath: json['poster_path'],
-      voteAverage: json['vote_average'],
+      voteAverage: json['vote_average'] ?? 0,
     );
   }
 }

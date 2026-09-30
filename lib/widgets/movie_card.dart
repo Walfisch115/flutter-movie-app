@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/api/tmdb.dart';
 import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/widgets/star_rating.dart';
 
@@ -10,10 +11,10 @@ class MovieCard extends StatelessWidget {
     required this.movie,
   });
 
-  Widget _getImageFromNetwork(imagePath) {
+  Widget _getImageFromNetwork(String? imagePath) {
     if (imagePath != null) {
       return Image.network(
-        "https://image.tmdb.org/t/p/w185$imagePath",
+        tmdb.imageUrl(imagePath, 'w185'),
         fit: BoxFit.cover,
       );
     } else {

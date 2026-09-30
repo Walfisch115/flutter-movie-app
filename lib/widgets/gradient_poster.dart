@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/api/tmdb.dart';
 
 class GradientPoster extends StatelessWidget {
   const GradientPoster({
@@ -24,7 +25,7 @@ class GradientPoster extends StatelessWidget {
           ),
         ),
         child: Image.network(
-          "https://image.tmdb.org/t/p/w1280$posterPath",
+          tmdb.imageUrl(posterPath, 'w1280'),
           fit: BoxFit.cover,
         ),
       ),

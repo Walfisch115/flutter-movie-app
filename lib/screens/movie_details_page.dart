@@ -7,6 +7,7 @@ import 'package:movie_app/widgets/streaming.dart';
 import 'package:movie_app/widgets/genre.dart';
 import 'package:movie_app/widgets/header.dart';
 import 'package:movie_app/widgets/credits.dart';
+import 'package:movie_app/widgets/error_message.dart';
 
 class MovieDetailsPage extends StatelessWidget {
   const MovieDetailsPage({
@@ -41,8 +42,12 @@ class MovieDetailsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 31, 29, 43),
       body: FutureBuilder(
-        future: getMovieDetails(id),
+        future: tmdb.getMovieDetails(id),
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return ErrorMessage(error: snapshot.error);
+          }
+
           if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
             return SingleChildScrollView(
               child: Column(
@@ -58,7 +63,7 @@ class MovieDetailsPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       children: [
-                        Genre(genre: snapshot.data!.genre),
+                        Genre(genres: snapshot.data!.genres),
                         const SizedBox(height: 16),
                         IconFeature(
                           text: _formatRuntime(snapshot.data!.runtime),
@@ -103,7 +108,7 @@ class MovieDetailsPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Streaming(
-                          streamingProviders: snapshot.data!.watchProvider,
+                          streamingLogos: snapshot.data!.streamingLogos,
                         ),
                       ],
                     ),

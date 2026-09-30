@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/api/tmdb.dart';
 
 class StreamingCard extends StatelessWidget {
   const StreamingCard({
@@ -13,7 +14,7 @@ class StreamingCard extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Image.network(
-        "https://image.tmdb.org/t/p/original$logoPath",
+        tmdb.imageUrl(logoPath, 'original'),
         height: 48,
       ),
     );

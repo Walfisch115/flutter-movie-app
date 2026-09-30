@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/screens/movie_details_page.dart';
+import 'package:movie_app/widgets/error_message.dart';
 import 'package:movie_app/widgets/movie_card.dart';
 
 class MovieListBuilder extends StatelessWidget {
@@ -17,6 +18,10 @@ class MovieListBuilder extends StatelessWidget {
     return FutureBuilder(
       future: future,
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return ErrorMessage(error: snapshot.error);
+        }
+
         if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
           if (snapshot.data!.isEmpty) {
             return const Center(
@@ -43,15 +48,7 @@ class MovieListBuilder extends StatelessWidget {
                       ),
                     );
                   },
-                  child: MovieCard(
-                    movie: Movie(
-                      id: snapshot.data![index].id,
-                      title: snapshot.data![index].title,
-                      posterPath: snapshot.data![index].posterPath,
-                      releaseDate: snapshot.data![index].releaseDate,
-                      voteAverage: snapshot.data![index].voteAverage,
-                    ),
-                  ),
+                  child: MovieCard(movie: snapshot.data![index]),
                 );
               },
             );

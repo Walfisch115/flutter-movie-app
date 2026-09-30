@@ -41,7 +41,7 @@ class _SearchPageState extends State<SearchPage> {
                 onSubmitted: (value) {
                   setState(() {
                     search = MovieListBuilder(
-                      future: searchMovies(value),
+                      future: tmdb.searchMovies(value),
                     );
                   });
                 },

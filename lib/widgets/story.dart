@@ -9,7 +9,7 @@ class Story extends StatelessWidget {
 
   final String text;
 
-  Widget _checkText(text) {
+  Widget _checkText(String text) {
     if (text != '') {
       return ExpandableText(
         text,

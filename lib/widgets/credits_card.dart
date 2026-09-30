@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/api/tmdb.dart';
 
 class CreditsCard extends StatelessWidget {
   const CreditsCard({
@@ -12,10 +13,10 @@ class CreditsCard extends StatelessWidget {
   final String role;
   final String? logoPath;
 
-  Widget _getImageFromNetwork(imagePath) {
+  Widget _getImageFromNetwork(String? imagePath) {
     if (imagePath != null) {
       return Image.network(
-        "https://image.tmdb.org/t/p/h632$imagePath",
+        tmdb.imageUrl(imagePath, 'h632'),
         fit: BoxFit.cover,
       );
     } else {

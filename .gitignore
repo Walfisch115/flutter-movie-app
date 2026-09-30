@@ -51,3 +51,6 @@ app.*.map.json
 /linux
 /macos
 /windows
+
+# Flutter widget preview
+/.widget_preview/

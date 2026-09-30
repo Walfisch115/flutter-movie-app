@@ -15,7 +15,7 @@ class Header extends StatelessWidget {
   final String title;
   final num rating;
 
-  Widget _getImageFromNetwork(context, imagePath) {
+  Widget _getImageFromNetwork(BuildContext context, String? imagePath) {
     if (imagePath != null) {
       return Stack(
         children: [
