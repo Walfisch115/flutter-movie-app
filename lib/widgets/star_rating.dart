@@ -48,7 +48,7 @@ class StarRating extends StatelessWidget {
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               rating.toStringAsFixed(1),

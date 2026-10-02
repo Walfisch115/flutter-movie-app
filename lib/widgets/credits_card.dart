@@ -23,7 +23,7 @@ class CreditsCard extends StatelessWidget {
       return Container(
         color: Colors.grey[700],
         child: const Icon(
-          Icons.not_interested_rounded,
+          Icons.person_outline,
           color: Colors.grey,
         ),
       );
