@@ -12,27 +12,28 @@ class Streaming extends StatelessWidget {
 
   @override
   Widget build(context) {
-    return Row(
-      children: [
-        Expanded(
-          child: streamingLogos.isEmpty
-              ? const Text(
-                  'Nicht verfügbar.',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 211, 211, 218),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                )
-              : Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  children: streamingLogos
-                      .map((logoPath) => StreamingCard(logoPath: logoPath))
-                      .toList(),
-                ),
+    const grey = Color.fromARGB(255, 211, 211, 218);
+
+    if (streamingLogos.isEmpty) {
+      return const Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          'Bei keinem Streaming-Dienst im Abo',
+          style: TextStyle(color: grey, fontSize: 16),
         ),
-      ],
+      );
+    }
+
+    // Align: Die äußere Column der Seite zentriert sonst die Liste.
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Wrap(
+        spacing: 12,
+        runSpacing: 12,
+        children: streamingLogos
+            .map((logoPath) => StreamingCard(logoPath: logoPath))
+            .toList(),
+      ),
     );
   }
 }

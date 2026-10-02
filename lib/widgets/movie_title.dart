@@ -13,7 +13,7 @@ class MovieTitle extends StatelessWidget {
   Widget build(context) {
     return AutoSizeText(
       title,
-      textAlign: TextAlign.center,
+      textAlign: TextAlign.start,
       style: const TextStyle(
         color: Color.fromARGB(255, 241, 241, 245),
         fontWeight: FontWeight.w500,

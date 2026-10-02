@@ -17,51 +17,48 @@ class StarRating extends StatelessWidget {
 
   final bool showMaxRating;
 
-  Widget _showMaxRating(bool showMaxRating) {
-    if (showMaxRating) {
-      return Text(
-        "/${maxRating.toString()}",
-        style: const TextStyle(
-          color: Color.fromARGB(255, 195, 195, 201),
-          fontSize: 18,
-        ),
-      );
-    } else {
-      return const SizedBox.shrink();
-    }
-  }
-
   @override
   Widget build(context) {
+    // TMDB liefert 0, solange niemand den Film bewertet hat.
+    final hasRating = rating > 0;
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(
-          Icons.star_rounded,
-          color: const Color.fromARGB(255, 18, 205, 217),
-          size: iconSize,
-        ),
-        const SizedBox(
-          width: 6,
-        ),
+        // Ohne Bewertung nur "N/A", ohne Stern.
+        if (hasRating) ...[
+          Icon(
+            Icons.star_rounded,
+            color: const Color.fromARGB(255, 18, 205, 217),
+            size: iconSize,
+          ),
+          const SizedBox(width: 6),
+        ],
         Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              rating.toStringAsFixed(1),
+              hasRating ? rating.toStringAsFixed(1) : 'N/A',
               style: TextStyle(
                 color: const Color.fromARGB(255, 195, 195, 201),
                 fontWeight: FontWeight.w500,
                 fontSize: textSize,
               ),
             ),
-            const SizedBox(
-              width: 4,
-            ),
-            _showMaxRating(showMaxRating),
+            // Abstand nur, wenn auch "/10" folgt.
+            if (showMaxRating && hasRating) ...[
+              const SizedBox(width: 4),
+              Text(
+                '/$maxRating',
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 195, 195, 201),
+                  fontSize: textSize,
+                ),
+              ),
+            ],
           ],
         ),
       ],

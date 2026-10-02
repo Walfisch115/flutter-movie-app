@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:movie_app/api/tmdb.dart';
 import 'package:movie_app/models/person.dart';
-import 'package:movie_app/widgets/credits_card.dart';
 
-class Credits extends StatelessWidget {
+/// Besetzung und Crew als Liste: rundes Foto links, Name und Rolle rechts.
+/// Zuerst sind nur wenige Personen sichtbar, der Rest lässt sich ausklappen.
+class Credits extends StatefulWidget {
   const Credits({
     super.key,
     required this.credits,
@@ -12,37 +14,118 @@ class Credits extends StatelessWidget {
   final List<Person> credits;
 
   @override
+  State<Credits> createState() => _CreditsState();
+}
+
+class _CreditsState extends State<Credits> {
+  /// Sichtbar, solange die Liste eingeklappt ist.
+  static const int _collapsedCount = 5;
+
+  /// Höchstens so viele Personen beim Ausklappen. TMDB liefert oft 50 und mehr.
+  static const int _maxPeople = 15;
+
+  bool _expanded = false;
+
+  @override
   Widget build(BuildContext context) {
+    final credits = widget.credits;
+
     if (credits.isEmpty) {
-      return const Row(
-        children: [
-          Text(
-            'Keine Informationen.',
-            style: TextStyle(
-              color: Color.fromARGB(255, 211, 211, 218),
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
+      return const Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          'Keine Informationen.',
+          style: TextStyle(
+            color: Color.fromARGB(255, 211, 211, 218),
+            fontSize: 16,
           ),
-        ],
+        ),
       );
     }
 
-    return SizedBox(
-      height: 200,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: credits.length,
-        itemBuilder: (context, index) {
-          final person = credits[index];
-          return CreditsCard(
-            name: person.name,
-            role: person.role,
-            logoPath: person.profilePath,
-          );
-        },
-        separatorBuilder: (context, index) => const SizedBox(width: 12),
-      ),
+    final allPeople = credits.take(_maxPeople).toList();
+    final shownPeople =
+        _expanded ? allPeople : allPeople.take(_collapsedCount).toList();
+
+    // Ausklappen lohnt sich nur, wenn es mehr Personen gibt als sichtbar sind.
+    final canExpand = allPeople.length > _collapsedCount;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final person in shownPeople)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Row(
+              children: [
+                ClipOval(
+                  child: SizedBox.square(
+                    dimension: 48,
+                    child: _photo(person.profilePath),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        person.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Color.fromARGB(255, 241, 241, 245),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        person.role,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Color.fromARGB(255, 160, 160, 170),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        if (canExpand)
+          TextButton(
+            onPressed: () => setState(() => _expanded = !_expanded),
+            style: TextButton.styleFrom(
+              foregroundColor: const Color.fromARGB(255, 18, 205, 217),
+              // Kein Mindestmaß, sonst entsteht über dem Text viel Leerraum.
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Text(_expanded ? 'Weniger anzeigen' : 'Alle anzeigen'),
+          ),
+      ],
+    );
+  }
+
+  /// Foto der Person oder ein Platzhalter, wenn TMDB keins hat.
+  Widget _photo(String? path) {
+    if (path == null) {
+      return Container(
+        color: const Color.fromARGB(255, 37, 40, 54),
+        child: const Icon(
+          Icons.person_outline,
+          color: Color.fromARGB(255, 105, 105, 116),
+        ),
+      );
+    }
+
+    return Image.network(
+      tmdb.imageUrl(path, 'w185'),
+      fit: BoxFit.cover,
     );
   }
 }

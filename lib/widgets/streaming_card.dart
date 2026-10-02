@@ -14,7 +14,7 @@ class StreamingCard extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Image.network(
-        tmdb.imageUrl(logoPath, 'original'),
+        tmdb.imageUrl(logoPath, 'w154'),
         height: 48,
       ),
     );

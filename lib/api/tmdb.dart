@@ -32,7 +32,7 @@ class TmdbApi {
   Future<MovieDetail> getMovieDetails(int id) async {
     
     final json = await _get('/3/movie/$id', {
-      'append_to_response': 'watch/providers,credits',
+      'append_to_response': 'watch/providers,credits,release_dates',
     });
 
     return MovieDetail.fromJson(json);

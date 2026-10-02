@@ -26,17 +26,15 @@ class Story extends StatelessWidget {
         ),
       );
     } else {
-      return Row(
-        children: const [
-          Text(
-            'Keine Informationen.',
-            style: TextStyle(
-              color: Color.fromARGB(255, 211, 211, 218),
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
+      return const Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          'Für diesen Film gibt es noch keine Beschreibung.',
+          style: TextStyle(
+            color: Color.fromARGB(255, 211, 211, 218),
+            fontSize: 16,
           ),
-        ],
+        ),
       );
     }
   }

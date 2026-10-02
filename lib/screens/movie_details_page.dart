@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:movie_app/api/tmdb.dart';
-import 'package:movie_app/widgets/icon_feature.dart';
+import 'package:movie_app/models/movie_detail.dart';
 import 'package:movie_app/widgets/story.dart';
 import 'package:movie_app/widgets/streaming.dart';
-import 'package:movie_app/widgets/genre.dart';
 import 'package:movie_app/widgets/header.dart';
 import 'package:movie_app/widgets/credits.dart';
+import 'package:movie_app/widgets/blurred_background.dart';
 import 'package:movie_app/widgets/error_message.dart';
+import 'package:movie_app/widgets/info_badge.dart';
+import 'package:movie_app/widgets/section_title.dart';
 
 class MovieDetailsPage extends StatelessWidget {
   const MovieDetailsPage({
@@ -17,24 +19,39 @@ class MovieDetailsPage extends StatelessWidget {
 
   final int id;
 
+  /// Abstand zwischen den Abschnitten (Handlung, Streaming, Besetzung).
+  static const double _sectionSpacing = 24;
+
   String _formatRuntime(int runtime) {
-    int hours = runtime ~/ 60;
-    int minutes = runtime % 60;
+    final hours = runtime ~/ 60;
+    final minutes = runtime % 60;
     return '${hours == 0 ? '' : '$hours Std. '}$minutes Min.';
   }
 
-  String _formatReleaseDate(String releaseDate) {
-    if (releaseDate != "") {
-      var date = DateTime.parse(releaseDate);
+  /// Erscheinungsjahr, z. B. "2023", oder leer, wenn unbekannt.
+  String _year(String releaseDate) {
+    if (releaseDate == '') return '';
+    return '${DateTime.parse(releaseDate).year}';
+  }
 
-      String day = date.day.toString();
-      String month = date.month.toString();
-      String year = date.year.toString();
+  /// Laufzeit und FSK als einzelne Angaben. Fehlende Angaben fallen weg.
+  List<String> _infoParts(MovieDetail movie) {
+    return [
+      if (movie.runtime > 0) _formatRuntime(movie.runtime),
+      if (movie.ageRating != '') 'FSK ${movie.ageRating}',
+    ];
+  }
 
-      return '$day.$month.$year';
-    } else {
-      return 'N/A';
-    }
+  /// Eine Zeile mit kleinen Boxen, bricht bei Bedarf um.
+  Widget _badgeRow(List<String> parts) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [for (final part in parts) InfoBadge(part)],
+      ),
+    );
   }
 
   @override
@@ -49,102 +66,73 @@ class MovieDetailsPage extends StatelessWidget {
           }
 
           if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
-            return SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Header(
-                    posterPath: snapshot.data!.backdropPath,
-                    title: snapshot.data!.title,
-                    rating: snapshot.data!.voteAverage,
+            final backdropPath = snapshot.data!.backdropPath;
+
+            return Stack(
+              fit: StackFit.expand,
+              children: [
+                // Weichgezeichnetes Backdrop als Hintergrund der ganzen Seite.
+                if (backdropPath != null)
+                  Positioned.fill(
+                    child: BlurredBackground(imagePath: backdropPath),
                   ),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                // Inhalt nur im sicheren Bereich. Status- und Navigationsleiste
+                // zeigen weiter den Hintergrund, der Inhalt scrollt nicht darunter.
+                SafeArea(
+                  child: SingleChildScrollView(
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Genre(genres: snapshot.data!.genres),
-                        const SizedBox(height: 16),
-                        IconFeature(
-                          text: _formatRuntime(snapshot.data!.runtime),
-                          icon: Icons.schedule_rounded,
-                          iconSize: 18,
-                        ),
-                        const SizedBox(height: 12),
-                        IconFeature(
-                          text: _formatReleaseDate(snapshot.data!.releaseDate),
-                          icon: Icons.calendar_today_outlined,
-                          iconSize: 16,
+                        Header(
+                          backdropPath: snapshot.data!.backdropPath,
+                          title: snapshot.data!.title,
+                          rating: snapshot.data!.voteAverage,
+                          year: _year(snapshot.data!.releaseDate),
                         ),
                         const SizedBox(height: 16),
-                        Row(
-                          children: const [
-                            Text(
-                              'Handlung',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 241, 241, 245),
-                                fontSize: 22,
-                                fontWeight: FontWeight.w500,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            children: [
+                              // Angaben als kleine Boxen über der Handlung:
+                              // erst [3 Std.] [FSK 12], darunter die Genres.
+                              if (_infoParts(snapshot.data!).isNotEmpty)
+                                _badgeRow(_infoParts(snapshot.data!)),
+                              if (_infoParts(snapshot.data!).isNotEmpty &&
+                                  snapshot.data!.genres.isNotEmpty)
+                                const SizedBox(height: 8),
+                              if (snapshot.data!.genres.isNotEmpty)
+                                _badgeRow(snapshot.data!.genres),
+                              const SizedBox(height: _sectionSpacing),
+                              const SectionTitle('Handlung'),
+                              const SizedBox(height: 12),
+                              Story(
+                                text: snapshot.data!.overview,
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Story(
-                          text: snapshot.data!.overview,
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          children: const [
-                            Text(
-                              'Streaming',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 241, 241, 245),
-                                fontSize: 22,
-                                fontWeight: FontWeight.w500,
+                              const SizedBox(height: _sectionSpacing),
+                              const SectionTitle('Streaming'),
+                              const SizedBox(height: 12),
+                              Streaming(
+                                streamingLogos: snapshot.data!.streamingLogos,
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: _sectionSpacing),
+                              const SectionTitle('Besetzung und Crew'),
+                              const SizedBox(height: 12),
+                              Credits(
+                                credits: snapshot.data!.credits,
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 8),
-                        Streaming(
-                          streamingLogos: snapshot.data!.streamingLogos,
-                        ),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: const [
-                            Text(
-                              'Besetzung und Crew',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 241, 241, 245),
-                                fontSize: 22,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Credits(
-                          credits: snapshot.data!.credits,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                ],
-              ),
+                ),
+              ],
             );
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),

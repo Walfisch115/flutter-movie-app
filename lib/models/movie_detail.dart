@@ -10,6 +10,7 @@ class MovieDetail {
   final int runtime;
   final List<String> genres;
   final List<String> streamingLogos;
+  final String ageRating;
   final List<Person> credits;
 
   MovieDetail({
@@ -22,6 +23,7 @@ class MovieDetail {
     required this.runtime,
     required this.genres,
     required this.streamingLogos,
+    required this.ageRating,
     required this.credits,
   });
 
@@ -51,6 +53,16 @@ class MovieDetail {
         ),
     ];
 
+    // Altersfreigabe (FSK) in Deutschland, leer wenn unbekannt.
+    final List countries = json['release_dates']?['results'] ?? [];
+    final ageRatings = [
+      for (var country in countries)
+        if (country['iso_3166_1'] == 'DE')
+          for (var release in country['release_dates'])
+            if (release['certification'] != '')
+              release['certification'] as String,
+    ];
+
     return MovieDetail(
       id: json['id'],
       title: json['title'],
@@ -63,9 +75,14 @@ class MovieDetail {
           .map((genre) => genre['name'] as String)
           .toList(),
       streamingLogos: flatrate
+          // Werbe-Varianten wie "Netflix basic with Ads" weglassen,
+          // sonst erscheint derselbe Dienst doppelt.
+          .where((provider) =>
+              !(provider['provider_name'] as String).contains('with Ads'))
           .map<String>((provider) => provider['logo_path'])
           .toList(),
       credits: credits,
+      ageRating: ageRatings.isEmpty ? '' : ageRatings.first,
     );
   }
 }
