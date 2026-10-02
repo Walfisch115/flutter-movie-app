@@ -4,11 +4,13 @@ class MovieSearchBar extends StatelessWidget {
   const MovieSearchBar({
     super.key,
     required this.textController,
+    this.focusNode,
     required this.onClear,
     required this.onSubmitted,
   });
 
   final TextEditingController textController;
+  final FocusNode? focusNode;
   final VoidCallback onClear;
   final Function(String)? onSubmitted;
 
@@ -16,6 +18,7 @@ class MovieSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: textController,
+      focusNode: focusNode,
       onSubmitted: onSubmitted,
       onTapOutside: (event) {
         FocusManager.instance.primaryFocus?.unfocus();

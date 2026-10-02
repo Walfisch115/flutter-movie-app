@@ -6,15 +6,27 @@ import 'package:movie_app/api/api_key.dart';
 import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/models/movie_detail.dart';
 
+/// Eine Seite mit Filmen und die Gesamtzahl der Seiten.
+typedef MoviePage = ({List<Movie> movies, int totalPages});
+
 class TmdbApi {
 
-  Future<List<Movie>> searchMovies(String query) async {
+  /// Sucht Filme. TMDB liefert pro [page] höchstens 20 Ergebnisse.
+  /// [totalPages] sagt, wie viele Seiten es insgesamt gibt.
+  Future<MoviePage> searchMovies(
+    String query, {
+    int page = 1,
+  }) async {
+    final json = await _get('/3/search/movie', {
+      'query': query,
+      'page': '$page',
+    });
 
-    final json = await _get('/3/search/movie', {'query': query});
-
-    return (json['results'] as List)
+    final movies = (json['results'] as List)
         .map((movie) => Movie.fromJson(movie))
         .toList();
+
+    return (movies: movies, totalPages: json['total_pages'] as int);
   }
 
   Future<MovieDetail> getMovieDetails(int id) async {
