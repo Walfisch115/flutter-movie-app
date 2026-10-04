@@ -11,13 +11,28 @@ import 'package:movie_app/widgets/error_message.dart';
 import 'package:movie_app/widgets/info_badge.dart';
 import 'package:movie_app/widgets/section_title.dart';
 
-class MovieDetailsPage extends StatelessWidget {
+class MovieDetailsPage extends StatefulWidget {
   const MovieDetailsPage({
     super.key,
     required this.id,
   });
 
   final int id;
+
+  @override
+  State<MovieDetailsPage> createState() => _MovieDetailsPageState();
+}
+
+class _MovieDetailsPageState extends State<MovieDetailsPage> {
+  late final Future<MovieDetail> _movie;
+
+  @override
+  void initState() {
+    super.initState();
+    // Einmal laden und merken. Stünde der Aufruf in build, ginge bei jedem
+    // Neuaufbau der Seite (z. B. Drehen des Handys) eine neue Anfrage raus.
+    _movie = tmdb.getMovieDetails(widget.id);
+  }
 
   /// Abstand zwischen den Abschnitten (Handlung, Streaming, Besetzung).
   static const double _sectionSpacing = 24;
@@ -59,14 +74,16 @@ class MovieDetailsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 31, 29, 43),
       body: FutureBuilder(
-        future: tmdb.getMovieDetails(id),
+        future: _movie,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return ErrorMessage(error: snapshot.error);
           }
 
           if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
-            final backdropPath = snapshot.data!.backdropPath;
+            final movie = snapshot.data!;
+            final backdropPath = movie.backdropPath;
+            final infoParts = _infoParts(movie);
 
             return Stack(
               fit: StackFit.expand,
@@ -84,10 +101,10 @@ class MovieDetailsPage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Header(
-                          backdropPath: snapshot.data!.backdropPath,
-                          title: snapshot.data!.title,
-                          rating: snapshot.data!.voteAverage,
-                          year: _year(snapshot.data!.releaseDate),
+                          backdropPath: movie.backdropPath,
+                          title: movie.title,
+                          rating: movie.voteAverage,
+                          year: _year(movie.releaseDate),
                         ),
                         const SizedBox(height: 16),
                         Padding(
@@ -96,30 +113,30 @@ class MovieDetailsPage extends StatelessWidget {
                             children: [
                               // Angaben als kleine Boxen über der Handlung:
                               // erst [3 Std.] [FSK 12], darunter die Genres.
-                              if (_infoParts(snapshot.data!).isNotEmpty)
-                                _badgeRow(_infoParts(snapshot.data!)),
-                              if (_infoParts(snapshot.data!).isNotEmpty &&
-                                  snapshot.data!.genres.isNotEmpty)
+                              if (infoParts.isNotEmpty)
+                                _badgeRow(infoParts),
+                              if (infoParts.isNotEmpty &&
+                                  movie.genres.isNotEmpty)
                                 const SizedBox(height: 8),
-                              if (snapshot.data!.genres.isNotEmpty)
-                                _badgeRow(snapshot.data!.genres),
+                              if (movie.genres.isNotEmpty)
+                                _badgeRow(movie.genres),
                               const SizedBox(height: _sectionSpacing),
                               const SectionTitle('Handlung'),
                               const SizedBox(height: 12),
                               Story(
-                                text: snapshot.data!.overview,
+                                text: movie.overview,
                               ),
                               const SizedBox(height: _sectionSpacing),
                               const SectionTitle('Streaming'),
                               const SizedBox(height: 12),
                               Streaming(
-                                streamingLogos: snapshot.data!.streamingLogos,
+                                streamingLogos: movie.streamingLogos,
                               ),
                               const SizedBox(height: _sectionSpacing),
                               const SectionTitle('Besetzung und Crew'),
                               const SizedBox(height: 12),
                               Credits(
-                                credits: snapshot.data!.credits,
+                                credits: movie.credits,
                               ),
                             ],
                           ),
