@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/style/colors.dart';
 
 import 'package:movie_app/api/tmdb.dart';
 import 'package:movie_app/models/movie_detail.dart';
@@ -72,7 +73,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 31, 29, 43),
+      backgroundColor: AppColors.background,
       body: FutureBuilder(
         future: _movie,
         builder: (context, snapshot) {

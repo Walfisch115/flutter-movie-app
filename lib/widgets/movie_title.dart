@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/style/colors.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class MovieTitle extends StatelessWidget {
@@ -15,9 +16,9 @@ class MovieTitle extends StatelessWidget {
       title,
       textAlign: TextAlign.start,
       style: const TextStyle(
-        color: Color.fromARGB(255, 241, 241, 245),
+        color: AppColors.text,
         fontWeight: FontWeight.w500,
-        fontSize: 32,
+        fontSize: 28,
         height: 1.3,
       ),
       maxLines: 2,

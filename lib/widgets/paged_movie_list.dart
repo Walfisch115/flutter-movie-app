@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/style/colors.dart';
 
 import 'package:movie_app/api/tmdb.dart';
 import 'package:movie_app/models/movie.dart';
@@ -71,13 +72,18 @@ class _PagedMovieListState extends State<PagedMovieList> {
       return ErrorMessage(error: _error);
     }
 
+    // Erste Seite lädt noch: Ladekreis in der Mitte statt oben in der Liste.
+    if (_movies.isEmpty && _hasMore) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     // Fertig geladen, aber nichts gefunden.
     if (_movies.isEmpty && !_hasMore) {
       return const Center(
         child: Text(
-          'keine Ergebnisse',
+          'Keine Ergebnisse',
           style: TextStyle(
-            color: Color.fromARGB(255, 241, 241, 245),
+            color: AppColors.text,
             fontSize: 18,
           ),
         ),

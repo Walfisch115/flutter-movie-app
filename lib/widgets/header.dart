@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/style/colors.dart';
 import 'package:movie_app/widgets/movie_title.dart';
 import 'package:movie_app/widgets/gradient_backdrop.dart';
 
@@ -32,13 +33,13 @@ class Header extends StatelessWidget {
         MovieTitle(title: title),
         if (hasRating || year.isNotEmpty) ...[
           const SizedBox(height: 8),
-          // z. B. "☆ 8.1 | 2023"
+          // z. B. "★ 8.1 | 2023"
           Row(
             children: [
               if (hasRating) ...[
                 const Icon(
-                  Icons.star_outline_rounded,
-                  color: Color.fromARGB(255, 211, 211, 218),
+                  Icons.star_rounded,
+                  color: AppColors.textSecondary,
                   size: 18,
                 ),
                 const SizedBox(width: 4),
@@ -85,7 +86,7 @@ class Header extends StatelessWidget {
 }
 
 const _infoStyle = TextStyle(
-  color: Color.fromARGB(255, 211, 211, 218),
+  color: AppColors.textSecondary,
   fontSize: 14,
 );
 
@@ -99,7 +100,7 @@ class _Divider extends StatelessWidget {
       width: 1,
       height: 14,
       margin: const EdgeInsets.symmetric(horizontal: 8),
-      color: const Color.fromARGB(255, 105, 105, 116),
+      color: AppColors.hint,
     );
   }
 }

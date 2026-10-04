@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/style/colors.dart';
 
 import 'package:movie_app/api/tmdb.dart';
 import 'package:movie_app/widgets/paged_movie_list.dart';
@@ -41,7 +42,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 31, 29, 43),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -61,6 +62,8 @@ class _SearchPageState extends State<SearchPage> {
                 },
                 onClear: () {
                   _searchController.clear();
+                  // Direkt weitertippen können, Tastatur geht auf.
+                  _searchFocus.requestFocus();
                 },
               ),
             ),

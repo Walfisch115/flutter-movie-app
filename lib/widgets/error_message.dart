@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/style/colors.dart';
 
 class ErrorMessage extends StatelessWidget {
   const ErrorMessage({
@@ -20,7 +21,7 @@ class ErrorMessage extends StatelessWidget {
           message,
           textAlign: TextAlign.center,
           style: const TextStyle(
-            color: Color.fromARGB(255, 241, 241, 245),
+            color: AppColors.text,
             fontSize: 18,
           ),
         ),

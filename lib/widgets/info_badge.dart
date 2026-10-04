@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/style/colors.dart';
 
 /// Kleine Box mit einer Angabe, z. B. "2023" oder "FSK 12".
 /// Optional mit Icon vor dem Text.
@@ -10,7 +11,7 @@ class InfoBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const color = Color.fromARGB(255, 211, 211, 218);
+    const color = AppColors.textSecondary;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),

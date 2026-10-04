@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/style/colors.dart';
 
 import 'package:movie_app/api/tmdb.dart';
 import 'package:movie_app/models/person.dart';
@@ -36,7 +37,7 @@ class _CreditsState extends State<Credits> {
         child: Text(
           'Keine Informationen.',
           style: TextStyle(
-            color: Color.fromARGB(255, 211, 211, 218),
+            color: AppColors.textSecondary,
             fontSize: 16,
           ),
         ),
@@ -74,7 +75,7 @@ class _CreditsState extends State<Credits> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          color: Color.fromARGB(255, 241, 241, 245),
+                          color: AppColors.text,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
@@ -85,7 +86,7 @@ class _CreditsState extends State<Credits> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          color: Color.fromARGB(255, 160, 160, 170),
+                          color: AppColors.textMuted,
                           fontSize: 14,
                         ),
                       ),
@@ -99,7 +100,7 @@ class _CreditsState extends State<Credits> {
           TextButton(
             onPressed: () => setState(() => _expanded = !_expanded),
             style: TextButton.styleFrom(
-              foregroundColor: const Color.fromARGB(255, 18, 205, 217),
+              foregroundColor: AppColors.accent,
               // Kein Mindestmaß, sonst entsteht über dem Text viel Leerraum.
               padding: const EdgeInsets.symmetric(vertical: 4),
               minimumSize: Size.zero,
@@ -115,10 +116,10 @@ class _CreditsState extends State<Credits> {
   Widget _photo(String? path) {
     if (path == null) {
       return Container(
-        color: const Color.fromARGB(255, 37, 40, 54),
+        color: AppColors.surface,
         child: const Icon(
           Icons.person_outline,
-          color: Color.fromARGB(255, 105, 105, 116),
+          color: AppColors.hint,
         ),
       );
     }

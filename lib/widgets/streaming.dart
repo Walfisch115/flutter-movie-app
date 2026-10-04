@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/style/colors.dart';
 
 import 'package:movie_app/widgets/streaming_card.dart';
 
@@ -12,7 +13,7 @@ class Streaming extends StatelessWidget {
 
   @override
   Widget build(context) {
-    const grey = Color.fromARGB(255, 211, 211, 218);
+    const grey = AppColors.textSecondary;
 
     if (streamingLogos.isEmpty) {
       return const Align(

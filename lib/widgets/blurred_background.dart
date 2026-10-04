@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:movie_app/style/colors.dart';
 import 'package:movie_app/api/tmdb.dart';
 
 /// Stark weichgezeichnetes Bild als Hintergrund der Seite.
@@ -26,14 +27,15 @@ class BlurredBackground extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        const DecoratedBox(
+        DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
+              // Hintergrundfarbe, oben durchscheinend, unten fast deckend.
               colors: [
-                Color.fromARGB(110, 31, 29, 43),
-                Color.fromARGB(230, 31, 29, 43),
+                AppColors.background.withAlpha(110),
+                AppColors.background.withAlpha(230),
               ],
             ),
           ),

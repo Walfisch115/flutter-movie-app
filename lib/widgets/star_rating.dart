@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/style/colors.dart';
 
 class StarRating extends StatelessWidget {
   const StarRating({
@@ -31,7 +32,7 @@ class StarRating extends StatelessWidget {
         if (hasRating) ...[
           Icon(
             Icons.star_rounded,
-            color: const Color.fromARGB(255, 18, 205, 217),
+            color: AppColors.accent,
             size: iconSize,
           ),
           const SizedBox(width: 6),
@@ -43,7 +44,7 @@ class StarRating extends StatelessWidget {
             Text(
               hasRating ? rating.toStringAsFixed(1) : 'N/A',
               style: TextStyle(
-                color: const Color.fromARGB(255, 195, 195, 201),
+                color: AppColors.textSecondary,
                 fontWeight: FontWeight.w500,
                 fontSize: textSize,
               ),
@@ -54,7 +55,7 @@ class StarRating extends StatelessWidget {
               Text(
                 '/$maxRating',
                 style: TextStyle(
-                  color: const Color.fromARGB(255, 195, 195, 201),
+                  color: AppColors.textSecondary,
                   fontSize: textSize,
                 ),
               ),

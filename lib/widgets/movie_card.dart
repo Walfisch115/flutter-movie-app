@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/style/colors.dart';
+import 'package:movie_app/style/image_colors.dart';
 import 'package:movie_app/api/tmdb.dart';
 import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/widgets/star_rating.dart';
@@ -19,13 +21,44 @@ class MovieCard extends StatelessWidget {
       );
     } else {
       return Container(
-        color: Colors.grey[700],
+        color: AppColors.surface,
         child: const Icon(
           Icons.movie_outlined,
-          color: Colors.grey,
+          color: AppColors.hint,
         ),
       );
     }
+  }
+
+  /// Poster mit Rahmen in der Hauptfarbe des Posters. Solange die Farbe
+  /// berechnet wird (oder wenn es kein Poster gibt), ist der Rahmen dezent grau.
+  Widget _framedPoster() {
+    final posterPath = movie.posterPath;
+    if (posterPath == null) return _poster(AppColors.border);
+
+    return FutureBuilder<Color>(
+      future: imageColor(tmdb.imageUrl(posterPath, 'w185')),
+      builder: (context, snapshot) {
+        // Halbtransparent, damit die Farbe nicht zu kräftig wirkt.
+        final color = snapshot.data?.withValues(alpha: 0.5);
+        return _poster(color ?? AppColors.border);
+      },
+    );
+  }
+
+  Widget _poster(Color borderColor) {
+    // Rahmen liegt über dem Bild (foreground).
+    return DecoratedBox(
+      position: DecorationPosition.foreground,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: borderColor, width: 1),
+      ),
+      child: AspectRatio(
+        aspectRatio: 2 / 3,
+        child: _getImageFromNetwork(movie.posterPath),
+      ),
+    );
   }
 
   @override
@@ -42,21 +75,7 @@ class MovieCard extends StatelessWidget {
               height: 90,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                // Rahmen liegt über dem Bild (foreground).
-                child: DecoratedBox(
-                  position: DecorationPosition.foreground,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: const Color.fromARGB(255, 55, 58, 76),
-                      width: 1,
-                    ),
-                  ),
-                  child: AspectRatio(
-                    aspectRatio: 2 / 3,
-                    child: _getImageFromNetwork(movie.posterPath),
-                  ),
-                ),
+                child: _framedPoster(),
               ),
             ),
             const SizedBox(width: 12),
@@ -72,7 +91,7 @@ class MovieCard extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
-                      color: Color(0xFFF1F1F5),
+                      color: AppColors.text,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -85,7 +104,7 @@ class MovieCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
-                          color: Color(0xFFD3D3DA),
+                          color: AppColors.textSecondary,
                         ),
                       ),
                       const Spacer(),
