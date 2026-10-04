@@ -27,12 +27,14 @@ A movie app built with Flutter and the [TMDB API](https://www.themoviedb.org). S
 ## Getting started
 1. Get a free API key at [themoviedb.org](https://www.themoviedb.org/settings/api).
 2. Create the file `lib/api/api_key.dart`:
+
    ```dart
    class ApiKey {
      static const String apiKey = 'YOUR_API_KEY';
    }
    ```
 3. Run the app:
+
    ```
    flutter pub get
    flutter run
