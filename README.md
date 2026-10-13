@@ -3,21 +3,22 @@ A movie app built with Flutter and the [TMDB API](https://www.themoviedb.org). S
 
 ## Screenshots
 <p>
-  <img src="./screenshots/searchpage_search.png" width="160" hspace="4">
-  <img src="./screenshots/searchpage_results.png" width="160" hspace="4">
+  <img src="./screenshots/start.png" width="160" hspace="4">
+  <img src="./screenshots/search.png" width="160" hspace="4">
   <img src="./screenshots/detailpage_1.png" width="160" hspace="4">
   <img src="./screenshots/detailpage_2.png" width="160" hspace="4">
 </p>
 
 ## Features
-**Search**
+**Start & search**
+- Trending movies of the week as poster grid
 - Search movies by title
 - Results load automatically while scrolling
 - Poster, release year and user rating for every result
-- Poster frames tinted in the poster's main color
 
 **Movie details**
 - Backdrop card with title, rating and year
+- Upcoming German release date for unreleased movies (cinema or streaming)
 - Runtime, age rating (FSK) and genres
 - Plot summary
 - Streaming services (subscription only)
