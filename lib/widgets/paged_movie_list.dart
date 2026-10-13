@@ -6,9 +6,10 @@ import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/screens/movie_details_page.dart';
 import 'package:movie_app/widgets/error_message.dart';
 import 'package:movie_app/widgets/movie_card.dart';
+import 'package:movie_app/widgets/movie_poster_tile.dart';
 
-/// Zeigt eine Liste von Filmen und lädt beim Scrollen automatisch
-/// die nächste Seite nach.
+/// Zeigt Filme als Liste oder Poster-Raster und lädt beim Scrollen
+/// automatisch die nächste Seite nach.
 ///
 /// [loadPage] lädt eine Seite (beginnend bei 1), z. B.
 /// `(page) => tmdb.searchMovies('Bond', page: page)`.
@@ -16,9 +17,17 @@ class PagedMovieList extends StatefulWidget {
   const PagedMovieList({
     super.key,
     required this.loadPage,
+    this.grid = false,
+    this.header,
   });
 
   final Future<MoviePage> Function(int page) loadPage;
+
+  /// true: Poster-Raster mit drei Spalten, false: Liste mit Karten.
+  final bool grid;
+
+  /// Optional, z. B. eine Überschrift. Scrollt mit dem Inhalt mit.
+  final Widget? header;
 
   @override
   State<PagedMovieList> createState() => _PagedMovieListState();
@@ -90,38 +99,89 @@ class _PagedMovieListState extends State<PagedMovieList> {
       );
     }
 
+    // Ladekreis oder Fehlermeldung unter dem letzten Film?
+    final hasFooter = _hasMore || _error != null;
+
+    // Poster-Raster: Überschrift, Raster und Ladekreis scrollen gemeinsam.
+    if (widget.grid) {
+      return CustomScrollView(
+        slivers: [
+          if (widget.header != null)
+            SliverToBoxAdapter(child: widget.header),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            sliver: SliverGrid.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                // Kacheln im Seitenverhältnis der Poster.
+                childAspectRatio: 2 / 3,
+              ),
+              itemCount: _movies.length,
+              itemBuilder: (context, index) {
+                final movie = _movies[index];
+                return GestureDetector(
+                  onTap: () => _openDetails(movie),
+                  child: MoviePosterTile(movie: movie),
+                );
+              },
+            ),
+          ),
+          // Als SliverList, damit der Ladekreis erst gebaut wird (und
+          // nachlädt), wenn er in die Nähe des sichtbaren Bereichs kommt.
+          if (hasFooter)
+            SliverList.builder(
+              itemCount: 1,
+              itemBuilder: (context, index) => _footer(),
+            ),
+          const SliverToBoxAdapter(child: SizedBox(height: 16)),
+        ],
+      );
+    }
+
+    final header = widget.header;
+    final extra = (header != null ? 1 : 0);
+
     return ListView.builder(
       // Extra Platz unter dem letzten Film (jede Karte hat selbst 12 unten).
       padding: const EdgeInsets.only(bottom: 4),
-      // Ein Eintrag mehr für den Ladekreis bzw. die Fehlermeldung am Ende.
-      itemCount: _movies.length + (_hasMore || _error != null ? 1 : 0),
+      // Plus Überschrift oben und Ladekreis bzw. Fehlermeldung unten.
+      itemCount: extra + _movies.length + (hasFooter ? 1 : 0),
       itemBuilder: (context, index) {
-        if (index == _movies.length) {
-          if (_error != null) {
-            return ErrorMessage(error: _error);
-          }
+        if (header != null && index == 0) return header;
+        index -= extra;
 
-          // Das Ende der Liste ist sichtbar: nächste Seite laden.
-          _loadNextPage();
-          return const Padding(
-            padding: EdgeInsets.all(16),
-            child: Center(child: CircularProgressIndicator()),
-          );
-        }
+        if (index == _movies.length) return _footer();
 
         final movie = _movies[index];
         return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MovieDetailsPage(id: movie.id),
-              ),
-            );
-          },
+          onTap: () => _openDetails(movie),
           child: MovieCard(movie: movie),
         );
       },
+    );
+  }
+
+  /// Unter dem letzten Film: Fehlermeldung oder Ladekreis. Wird nur gebaut,
+  /// wenn das Ende der Liste sichtbar wird.
+  Widget _footer() {
+    if (_error != null) return ErrorMessage(error: _error);
+
+    // Das Ende ist sichtbar: nächste Seite laden.
+    _loadNextPage();
+    return const Padding(
+      padding: EdgeInsets.all(16),
+      child: Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  void _openDetails(Movie movie) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MovieDetailsPage(id: movie.id),
+      ),
     );
   }
 }

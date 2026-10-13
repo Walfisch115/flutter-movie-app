@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/style/colors.dart';
-import 'package:movie_app/style/image_colors.dart';
 import 'package:movie_app/api/tmdb.dart';
 import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/widgets/star_rating.dart';
@@ -30,29 +29,14 @@ class MovieCard extends StatelessWidget {
     }
   }
 
-  /// Poster mit Rahmen in der Hauptfarbe des Posters. Solange die Farbe
-  /// berechnet wird (oder wenn es kein Poster gibt), ist der Rahmen dezent grau.
+  /// Poster mit dezentem grauem Rahmen.
   Widget _framedPoster() {
-    final posterPath = movie.posterPath;
-    if (posterPath == null) return _poster(AppColors.border);
-
-    return FutureBuilder<Color>(
-      future: imageColor(tmdb.imageUrl(posterPath, 'w185')),
-      builder: (context, snapshot) {
-        // Halbtransparent, damit die Farbe nicht zu kräftig wirkt.
-        final color = snapshot.data?.withValues(alpha: 0.5);
-        return _poster(color ?? AppColors.border);
-      },
-    );
-  }
-
-  Widget _poster(Color borderColor) {
     // Rahmen liegt über dem Bild (foreground).
     return DecoratedBox(
       position: DecorationPosition.foreground,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: borderColor, width: 1),
+        border: Border.all(color: AppColors.border, width: 1),
       ),
       child: AspectRatio(
         aspectRatio: 2 / 3,

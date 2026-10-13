@@ -22,6 +22,17 @@ class TmdbApi {
       'page': '$page',
     });
 
+    return _moviePage(json);
+  }
+
+  /// Filme, die diese Woche auf TMDB im Trend liegen.
+  Future<MoviePage> trendingMovies({int page = 1}) async {
+    final json = await _get('/3/trending/movie/week', {'page': '$page'});
+    return _moviePage(json);
+  }
+
+  /// Wandelt eine Antwort mit Filmliste in eine [MoviePage] um.
+  MoviePage _moviePage(Map<String, dynamic> json) {
     final movies = (json['results'] as List)
         .map((movie) => Movie.fromJson(movie))
         .toList();

@@ -11,15 +11,17 @@ class Header extends StatelessWidget {
     required this.backdropPath,
     required this.title,
     required this.rating,
-    required this.year,
+    required this.release,
   });
 
   final String? backdropPath;
   final String title;
   final num rating;
 
-  /// Erscheinungsjahr, leer wenn unbekannt.
-  final String year;
+  /// Erscheinungsjahr oder Starttermin, z. B. "2023" oder
+  /// "Ab 12.03.2027 im Kino".
+  /// Leer, wenn unbekannt.
+  final String release;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class Header extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         MovieTitle(title: title),
-        if (hasRating || year.isNotEmpty) ...[
+        if (hasRating || release.isNotEmpty) ...[
           const SizedBox(height: 8),
           // z. B. "★ 8.1 | 2023"
           Row(
@@ -45,8 +47,8 @@ class Header extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(rating.toStringAsFixed(1), style: _infoStyle),
               ],
-              if (hasRating && year.isNotEmpty) const _Divider(),
-              if (year.isNotEmpty) Text(year, style: _infoStyle),
+              if (hasRating && release.isNotEmpty) const _Divider(),
+              if (release.isNotEmpty) Text(release, style: _infoStyle),
             ],
           ),
         ],

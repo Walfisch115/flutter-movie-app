@@ -44,10 +44,21 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
     return '${hours == 0 ? '' : '$hours Std. '}$minutes Min.';
   }
 
-  /// Erscheinungsjahr, z. B. "2023", oder leer, wenn unbekannt.
-  String _year(String releaseDate) {
-    if (releaseDate == '') return '';
-    return '${DateTime.parse(releaseDate).year}';
+  /// Steht der Film in Deutschland noch aus und ist der Termin bekannt,
+  /// z. B. "Ab 12.03.2027 im Kino" oder "Ab 12.03.2027 im Stream",
+  /// sonst das Erscheinungsjahr.
+  /// Leer, wenn nichts bekannt ist.
+  String _release(MovieDetail movie) {
+    final german = movie.germanRelease;
+    if (german != null && german.isAfter(DateTime.now())) {
+      final day = german.day.toString().padLeft(2, '0');
+      final month = german.month.toString().padLeft(2, '0');
+      final where = movie.germanReleaseInCinema ? 'im Kino' : 'im Stream';
+      return 'Ab $day.$month.${german.year} $where';
+    }
+
+    if (movie.releaseDate == '') return '';
+    return '${DateTime.parse(movie.releaseDate).year}';
   }
 
   /// Laufzeit und FSK als einzelne Angaben. Fehlende Angaben fallen weg.
@@ -86,6 +97,16 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
             final backdropPath = movie.backdropPath;
             final infoParts = _infoParts(movie);
 
+            // Bis zu zwei Genres stehen mit in der Zeile von Laufzeit und FSK
+            // (was nicht passt, bricht um). Ab drei bekommen sie eine eigene.
+            final badgeRows = movie.genres.length >= 3
+                ? [infoParts, movie.genres]
+                : [
+                    [...infoParts, ...movie.genres],
+                  ];
+            final shownRows =
+                badgeRows.where((row) => row.isNotEmpty).toList();
+
             return Stack(
               fit: StackFit.expand,
               children: [
@@ -105,7 +126,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                           backdropPath: movie.backdropPath,
                           title: movie.title,
                           rating: movie.voteAverage,
-                          year: _year(movie.releaseDate),
+                          release: _release(movie),
                         ),
                         const SizedBox(height: 16),
                         Padding(
@@ -113,14 +134,11 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                           child: Column(
                             children: [
                               // Angaben als kleine Boxen über der Handlung:
-                              // erst [3 Std.] [FSK 12], darunter die Genres.
-                              if (infoParts.isNotEmpty)
-                                _badgeRow(infoParts),
-                              if (infoParts.isNotEmpty &&
-                                  movie.genres.isNotEmpty)
-                                const SizedBox(height: 8),
-                              if (movie.genres.isNotEmpty)
-                                _badgeRow(movie.genres),
+                              // [3 Std.] [FSK 12], darunter die Genres.
+                              for (var i = 0; i < shownRows.length; i++) ...[
+                                if (i > 0) const SizedBox(height: 8),
+                                _badgeRow(shownRows[i]),
+                              ],
                               const SizedBox(height: _sectionSpacing),
                               const SectionTitle('Handlung'),
                               const SizedBox(height: 12),

@@ -3,6 +3,7 @@ import 'package:movie_app/style/colors.dart';
 
 import 'package:movie_app/api/tmdb.dart';
 import 'package:movie_app/widgets/paged_movie_list.dart';
+import 'package:movie_app/widgets/section_title.dart';
 import 'package:movie_app/widgets/movie_search_bar.dart';
 
 class SearchPage extends StatefulWidget {
@@ -16,21 +17,12 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocus = FocusNode();
 
-  // Letzter Suchbegriff, null solange noch nicht gesucht wurde.
+  // Letzter Suchbegriff. null, solange nicht gesucht wurde oder das Feld
+  // leer ist. Dann zeigt die Seite die Trends der Woche.
   String? _query;
 
   // Zählt jede abgeschickte Suche, damit auch derselbe Begriff neu lädt.
   int _searchCount = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    // Beim Öffnen der App direkt ins Suchfeld. Erst nach dem ersten Frame,
-    // sonst öffnet Android beim App-Start die Tastatur nicht.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _searchFocus.requestFocus();
-    });
-  }
 
   @override
   void dispose() {
@@ -52,8 +44,11 @@ class _SearchPageState extends State<SearchPage> {
                 textController: _searchController,
                 focusNode: _searchFocus,
                 onSubmitted: (value) {
-                  // Bei leerer Eingabe (oder nur Leerzeichen) nicht suchen.
-                  if (value.trim().isEmpty) return;
+                  // Leere Eingabe (oder nur Leerzeichen): wieder die Trends.
+                  if (value.trim().isEmpty) {
+                    setState(() => _query = null);
+                    return;
+                  }
 
                   setState(() {
                     _query = value.trim();
@@ -62,6 +57,8 @@ class _SearchPageState extends State<SearchPage> {
                 },
                 onClear: () {
                   _searchController.clear();
+                  // Mit dem X sofort zurück zu den Trends.
+                  setState(() => _query = null);
                   // Direkt weitertippen können, Tastatur geht auf.
                   _searchFocus.requestFocus();
                 },
@@ -70,7 +67,15 @@ class _SearchPageState extends State<SearchPage> {
             const SizedBox(height: 8),
             Expanded(
               child: _query == null
-                  ? const SizedBox.shrink()
+                  // Vor der ersten Suche: Trends der Woche als Poster-Raster.
+                  ? PagedMovieList(
+                      loadPage: (page) => tmdb.trendingMovies(page: page),
+                      grid: true,
+                      header: const Padding(
+                        padding: EdgeInsets.fromLTRB(16, 0, 16, 12),
+                        child: SectionTitle('Trends der Woche'),
+                      ),
+                    )
                   // Neuer Key bei jeder Suche: Die Liste beginnt wieder bei Seite 1.
                   : PagedMovieList(
                       key: ValueKey(_searchCount),

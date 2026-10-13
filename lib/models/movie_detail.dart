@@ -11,6 +11,12 @@ class MovieDetail {
   final List<String> genres;
   final List<String> streamingLogos;
   final String ageRating;
+
+  /// Frühester Start in Deutschland (Kino oder digital), null wenn unbekannt.
+  final DateTime? germanRelease;
+
+  /// true, wenn der früheste deutsche Start im Kino ist, false bei digital.
+  final bool germanReleaseInCinema;
   final List<Person> credits;
 
   MovieDetail({
@@ -24,6 +30,8 @@ class MovieDetail {
     required this.genres,
     required this.streamingLogos,
     required this.ageRating,
+    required this.germanRelease,
+    required this.germanReleaseInCinema,
     required this.credits,
   });
 
@@ -63,6 +71,21 @@ class MovieDetail {
               release['certification'] as String,
     ];
 
+    // Starttermine in Deutschland: Kino (Typ 2 und 3) oder digital (Typ 4).
+    // Premieren, DVD und TV zählen nicht. Sortiert, der früheste zuerst.
+    final germanReleases = [
+      for (var country in countries)
+        if (country['iso_3166_1'] == 'DE')
+          for (var release in country['release_dates'])
+            if ([2, 3, 4].contains(release['type']))
+              (
+                date: DateTime.parse(release['release_date']),
+                inCinema: release['type'] != 4,
+              ),
+    ]..sort((a, b) => a.date.compareTo(b.date));
+    final firstGermanRelease =
+        germanReleases.isEmpty ? null : germanReleases.first;
+
     return MovieDetail(
       id: json['id'],
       title: json['title'],
@@ -83,6 +106,8 @@ class MovieDetail {
           .toList(),
       credits: credits,
       ageRating: ageRatings.isEmpty ? '' : ageRatings.first,
+      germanRelease: firstGermanRelease?.date,
+      germanReleaseInCinema: firstGermanRelease?.inCinema ?? false,
     );
   }
 }
