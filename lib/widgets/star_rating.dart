@@ -45,7 +45,7 @@ class StarRating extends StatelessWidget {
               hasRating ? rating.toStringAsFixed(1) : 'N/A',
               style: TextStyle(
                 color: AppColors.textSecondary,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
                 fontSize: textSize,
               ),
             ),

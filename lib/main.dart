@@ -6,7 +6,9 @@ import 'package:movie_app/screens/search_page.dart';
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
-    systemNavigationBarColor: AppColors.background,
+    // Ohne das legt Android hinter Zurück/Home/Übersicht einen fast
+    // deckenden weißen oder schwarzen Streifen.
+    systemNavigationBarContrastEnforced: false,
   ));
   runApp(
     const MainApp(),

@@ -91,6 +91,8 @@ class _PagedMovieListState extends State<PagedMovieList> {
     }
 
     return ListView.builder(
+      // Extra Platz unter dem letzten Film (jede Karte hat selbst 12 unten).
+      padding: const EdgeInsets.only(bottom: 4),
       // Ein Eintrag mehr für den Ladekreis bzw. die Fehlermeldung am Ende.
       itemCount: _movies.length + (_hasMore || _error != null ? 1 : 0),
       itemBuilder: (context, index) {
